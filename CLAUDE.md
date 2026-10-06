@@ -1,4 +1,28 @@
-# HyperFrames Composition Project
+# HyperFrames Videos (multi-vidéos)
+
+**One repo, one folder per video.** Each video is a self-contained HyperFrames project in
+`videos/<nom>/` (its own `index.html`, `compositions/`, `assets/`, `meta.json`,
+`hyperframes.json`). There is no per-video git repo, `package.json`, `CLAUDE.md` or `.env`:
+the CLI version, scripts, agent rules and provider config live once at the repo root.
+Every CLI command takes the video folder as its `DIR` argument — always pass it.
+
+- New video: `npm run new -- <nom> [--resolution=portrait|square|...]` (wraps `hyperframes init`
+  in `videos/` and removes the generated duplicates). Never run `hyperframes init` at the root.
+- Ask which video to work on when the request doesn't make it clear.
+
+## Media providers — defaults
+
+Voiceover and music go through **OpenRouter**, configured in the root `.env`
+(template: `.env.example`). Read model IDs from there instead of hard-coding them:
+
+- Voiceover (TTS): `TTS_MODEL` (Mistral Voxtral Mini TTS) with `TTS_VOICE` (`fr_marie_neutral`),
+  `POST $OPENROUTER_BASE_URL/audio/speech`. The raw output is quiet (~-12.5 dB peak): normalize
+  to `TTS_PEAK_DB` before placing it, and keep the raw take in `assets/audio/voxtral/`.
+- Music bed: `MUSIC_MODEL` (Google Lyria 3 Clip). Keep raw provider responses in the
+  git-ignored `.media/` of the video folder.
+
+These override the `/media-use` default order (HeyGen → ElevenLabs → Kokoro, HeyGen → Lyria via
+Gemini key → MusicGen). Use another provider only when the user asks.
 
 ## Skills — USE THESE FIRST
 
@@ -37,19 +61,20 @@ The domain skills (`/hyperframes-core`, `/hyperframes-animation`, `/hyperframes-
 ## Commands
 
 ```bash
-npm run dev          # human-operated foreground preview (blocks until stopped)
-npx hyperframes preview --background  # agent-safe persistent Studio preview
-npx hyperframes preview --status      # verify the persistent preview is listening
-npx hyperframes preview --stop        # stop it when review is finished
-npm run check        # lint + runtime + layout + motion + contrast (one command)
-npm run render       # render to MP4
-npm run publish      # publish and get a shareable link
-npx hyperframes lint --verbose  # include info-level findings
-npx hyperframes lint --json     # machine-readable output for CI
+npm run new -- <nom>                     # create videos/<nom>/
+npm run preview -- videos/<nom>          # agent-safe persistent Studio preview (--background)
+npx hyperframes preview videos/<nom> --status  # verify the persistent preview is listening
+npx hyperframes preview videos/<nom> --stop    # stop it when review is finished
+npm run preview:stop                     # stop every running preview
+npm run dev -- videos/<nom>              # human-operated foreground preview (blocks until stopped)
+npm run check -- videos/<nom>            # lint + runtime + layout + motion + contrast (one command)
+npm run render -- videos/<nom>           # render to MP4 (in videos/<nom>/renders/)
+npm run publish -- videos/<nom>          # publish and get a shareable link
+npx hyperframes lint videos/<nom> --verbose  # include info-level findings
 npx hyperframes docs <topic> # reference docs in terminal
 ```
 
-> **Agents must use `npx hyperframes preview --background` for Studio handoff.** Do not rely
+> **Agents must use `npm run preview -- videos/<nom>` (`hyperframes preview --background`) for Studio handoff.** Do not rely
 > on a shell/tool `run_in_background` wrapper around `npm run dev`: that foreground process
 > remains owned by the invoking session and can disappear while the browser stays open,
 > leaving refreshes at `ERR_CONNECTION_TIMED_OUT`. Verify with `preview --status`, keep it
@@ -75,17 +100,24 @@ https://hyperframes.heygen.com/llms.txt
 
 ## Project Structure
 
-- `index.html` — main composition (root timeline)
-- `compositions/` — sub-compositions referenced via `data-composition-src`
-- `meta.json` — project metadata (id, name)
-- `transcript.json` — whisper word-level transcript (if generated)
+- `.env` / `.env.example` — provider keys and model IDs (shared by every video; `.env` is git-ignored)
+- `package.json` — pinned HyperFrames CLI + scripts (shared)
+- `scripts/new-video.sh` — scaffolds a video folder (`npm run new`)
+- `videos/<nom>/` — one video per folder:
+  - `index.html` — main composition (root timeline)
+  - `compositions/` — sub-compositions referenced via `data-composition-src`
+  - `assets/` — audio, music, sfx, images
+  - `meta.json` — project metadata (id, name)
+  - `hyperframes.json` — HyperFrames project config
+  - `transcript.json` — whisper word-level transcript (if generated)
+  - `renders/` — rendered MP4s (git-ignored)
 
 ## Linting — ALWAYS RUN AFTER CHANGES
 
 After creating or editing any `.html` composition, **always** run the full check before considering the task complete:
 
 ```bash
-npm run check
+npm run check -- videos/<nom>
 ```
 
 Fix all errors before presenting the result. Warnings should be reviewed before rendering.

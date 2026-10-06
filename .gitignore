@@ -1,4 +1,4 @@
-# Rendered videos (regenerate with `npm run render`)
+# Rendered videos, per video folder (regenerate with `npm run render -- videos/<nom>`)
 renders/
 
 # Dependencies
