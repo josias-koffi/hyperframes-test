@@ -16,3 +16,6 @@ snapshots/
 # IDE / OS
 .idea/
 .DS_Store
+
+# Secrets (modèle versionné : .env.example)
+.env
