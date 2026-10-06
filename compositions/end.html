@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8">
+  </head>
+  <body>
+    <template>
+      <style>
+        #root {
+          position: absolute;
+          inset: 0;
+          padding: 200px 120px 120px;
+          color: #f0ebd8;
+          font-family: "IBM Plex Mono", monospace;
+        }
+        #end-inner {
+          width: 100%;
+          height: 100%;
+          display: grid;
+          grid-template-columns: 1fr 680px;
+          gap: 80px;
+          align-items: center;
+        }
+        #end-tags {
+          display: flex;
+          flex-direction: column;
+          gap: 18px;
+        }
+        .end-tag {
+          display: block;
+          font-family: "Archivo Black", sans-serif;
+          font-size: 92px;
+          line-height: 1.05;
+          letter-spacing: -0.04em;
+          white-space: nowrap;
+        }
+        #tag-3 {
+          color: #ff7d00;
+          transform-origin: left center;
+        }
+        .end-n {
+          font-family: "IBM Plex Mono", monospace;
+          font-size: 30px;
+          letter-spacing: 0.1em;
+          color: #ff7d00;
+          vertical-align: top;
+          margin-right: 22px;
+        }
+        #term {
+          border-radius: 18px;
+          border: 1px solid #3a322a;
+          background: #0e0c0a;
+          overflow: hidden;
+        }
+        #term-bar {
+          display: flex;
+          gap: 12px;
+          padding: 22px 28px;
+          border-bottom: 1px solid #3a322a;
+        }
+        #term-bar i {
+          display: block;
+          width: 16px;
+          height: 16px;
+          border-radius: 50%;
+          background: #3a322a;
+        }
+        #term-body {
+          display: flex;
+          flex-direction: column;
+          gap: 22px;
+          padding: 40px 36px 48px;
+          font-size: 30px;
+          line-height: 1.3;
+        }
+        .term-line {
+          white-space: nowrap;
+        }
+        .term-sign {
+          color: #ff7d00;
+        }
+        .ch {
+          opacity: 0;
+        }
+        #cursor {
+          display: inline-block;
+          width: 18px;
+          height: 36px;
+          background: #f0ebd8;
+          vertical-align: -6px;
+          margin-left: 4px;
+        }
+        .term-ok {
+          color: #b9b2a0;
+        }
+        .term-ok b {
+          color: #ff7d00;
+          font-weight: 700;
+        }
+        #end-caption {
+          font-size: 30px;
+          color: #b9b2a0;
+          letter-spacing: 0.04em;
+          margin-top: 34px;
+        }
+      </style>
+
+      <div data-hf-id="hf-gwfo" id="root" data-composition-id="end" data-width="1920" data-height="1080">
+        <div data-hf-id="hf-r847" id="end-inner">
+          <div data-hf-id="hf-id9u" id="end-tags">
+            <span data-hf-id="hf-u3ia" class="end-tag" id="tag-1"><span data-hf-id="hf-7tte" class="end-n">01</span>Voix off</span>
+            <span data-hf-id="hf-ki0w" class="end-tag" id="tag-2"><span data-hf-id="hf-884f" class="end-n">02</span>Effets sonores</span>
+            <span data-hf-id="hf-t2av" class="end-tag" id="tag-3"><span data-hf-id="hf-8mfg" class="end-n">03</span>Rendu final</span>
+          </div>
+          <div data-hf-id="hf-esvo" id="term-wrap">
+            <div data-hf-id="hf-q8fr" id="term">
+              <div data-hf-id="hf-7qbb" id="term-bar"><i data-hf-id="hf-wt6k"></i><i data-hf-id="hf-zeb8"></i><i data-hf-id="hf-y7e5"></i></div>
+              <div data-hf-id="hf-8kg4" id="term-body">
+                <p data-hf-id="hf-hlz6" class="term-line" id="cmd"><span data-hf-id="hf-dmdh" class="term-sign">$ </span></p>
+                <p data-hf-id="hf-za83" class="term-line term-ok" id="ok-1"><b data-hf-id="hf-gl6q">✓</b> voix · sfx · mixage</p>
+                <p data-hf-id="hf-6ywj" class="term-line term-ok" id="ok-2"><b data-hf-id="hf-vgrq">✓</b> video.mp4 — 16 s, 1080p</p>
+              </div>
+            </div>
+            <p data-hf-id="hf-pxgf" id="end-caption">Tout se fait depuis le terminal.</p>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        // Typed command: one span per character, built once (deterministic, seek-safe).
+        const CMD = "npx hyperframes render";
+        const cmdEl = document.getElementById("cmd");
+        for (const c of CMD) {
+          const s = document.createElement("span");
+          s.className = "ch";
+          s.textContent = c === " " ? " " : c;
+          cmdEl.appendChild(s);
+        }
+        const cursor = document.createElement("span");
+        cursor.id = "cursor";
+        cmdEl.appendChild(cursor);
+
+        // scene-local time (scene mounts at 10.1s); VO line 3 (Voxtral) speaks 0.20–4.09,
+        // phrases start at 0.20 / 0.92 / 1.69 / 2.85
+        const tl = gsap.timeline({ paused: true });
+        tl.fromTo("#tag-1", { opacity: 0, x: -80 }, { opacity: 1, x: 0, duration: 0.4, ease: "expo.out" }, 0.2);
+        tl.fromTo("#tag-2", { opacity: 0, x: -80 }, { opacity: 1, x: 0, duration: 0.4, ease: "expo.out" }, 0.92);
+        tl.fromTo("#tag-3", { opacity: 0, scale: 1.25 }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(2)" }, 1.69);
+
+        tl.fromTo("#term", { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 0.35);
+        tl.fromTo("#end-caption", { opacity: 0 }, { opacity: 1, duration: 0.5 }, 2.85);
+        tl.fromTo("#cmd .ch", { opacity: 0 }, { opacity: 1, duration: 0.01, stagger: 0.055 }, 2.6);
+        tl.fromTo("#ok-1", { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" }, 4.0);
+        tl.fromTo("#ok-2", { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" }, 4.4);
+        // caret blink keeps the held end frame alive; finite repeat inside the scene window
+        tl.fromTo("#cursor", { opacity: 1 }, { opacity: 0, duration: 0.3, ease: "steps(1)", repeat: 17, yoyo: true }, 0.4);
+        window.__timelines["end"] = tl;
+      </script>
+    </template>
+  </body>
+</html>

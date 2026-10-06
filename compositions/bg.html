@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8">
+  </head>
+  <body>
+    <template>
+      <style>
+        #root {
+          position: absolute;
+          inset: 0;
+          overflow: hidden;
+          background: #14110e;
+          font-family: "IBM Plex Mono", monospace;
+        }
+        #bg-grid {
+          position: absolute;
+          inset: 0;
+          background-image:
+            linear-gradient(to right, rgba(240, 235, 216, 0.05) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(240, 235, 216, 0.05) 1px, transparent 1px);
+          background-size: 80px 80px;
+        }
+        #bg-glow {
+          position: absolute;
+          width: 1400px;
+          height: 1400px;
+          left: 900px;
+          top: -300px;
+          border-radius: 50%;
+          background: radial-gradient(circle, rgba(255, 125, 0, 0.16) 0%, rgba(255, 125, 0, 0) 62%);
+        }
+        #bg-ghost {
+          position: absolute;
+          left: -40px;
+          bottom: -90px;
+          font-family: "Archivo Black", sans-serif;
+          font-size: 420px;
+          line-height: 1;
+          letter-spacing: -0.04em;
+          color: #19150f;
+          white-space: nowrap;
+        }
+        #bg-rule {
+          position: absolute;
+          left: 120px;
+          right: 120px;
+          top: 120px;
+          height: 1px;
+          background: #3a322a;
+          transform-origin: left center;
+        }
+        #hud {
+          position: absolute;
+          left: 120px;
+          right: 120px;
+          top: 76px;
+          display: flex;
+          justify-content: space-between;
+          font-size: 22px;
+          letter-spacing: 0.12em;
+          color: #b9b2a0;
+          text-transform: uppercase;
+        }
+        #hud-dot {
+          display: inline-block;
+          width: 14px;
+          height: 14px;
+          border-radius: 50%;
+          background: #ff7d00;
+          margin-right: 14px;
+          vertical-align: 1px;
+        }
+      </style>
+
+      <div data-hf-id="hf-1xo8" id="root" data-composition-id="bg" data-width="1920" data-height="1080">
+        <div data-hf-id="hf-r3kh" id="bg-grid"></div>
+        <div data-hf-id="hf-k3n9" id="bg-glow" data-layout-allow-overflow=""></div>
+        <div data-hf-id="hf-szkv" id="bg-ghost" data-layout-ignore="" aria-hidden="true">PROMPT → MP4</div>
+        <div data-hf-id="hf-g3wz" id="bg-rule"></div>
+        <div data-hf-id="hf-i9xo" id="hud">
+          <span data-hf-id="hf-ns7d"><span data-hf-id="hf-wxhz" id="hud-dot"></span>Claude Code × HyperFrames</span>
+          <span data-hf-id="hf-d2gf">1920×1080 · 60 fps</span>
+        </div>
+      </div>
+
+      <script>
+        const tl = gsap.timeline({ paused: true });
+        tl.fromTo("#bg-rule", { scaleX: 0 }, { scaleX: 1, duration: 1.1, ease: "power3.out" }, 0.05);
+        tl.fromTo("#hud", { opacity: 0, y: -12 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, 0.2);
+        tl.fromTo("#bg-glow", { scale: 0.92, x: 0 }, { scale: 1.08, x: -260, duration: 16, ease: "sine.inOut" }, 0);
+        tl.fromTo("#bg-ghost", { x: 0 }, { x: -320, duration: 16, ease: "none" }, 0);
+        tl.fromTo(
+          "#bg-grid",
+          { backgroundPosition: "0px 0px" },
+          { backgroundPosition: "-80px -40px", duration: 16, ease: "none" },
+          0,
+        );
+        window.__timelines["bg"] = tl;
+      </script>
+    </template>
+  </body>
+</html>

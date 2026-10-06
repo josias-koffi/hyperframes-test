@@ -1,0 +1,18 @@
+# Rendered videos (regenerate with `npm run render`)
+renders/
+
+# Dependencies
+node_modules/
+
+# HyperFrames local caches / Studio state (regenerated automatically)
+.hyperframes/
+.thumbnails/
+.waveform-cache/
+snapshots/
+
+# Raw provider responses (decoded result is in assets/music/)
+.media/
+
+# IDE / OS
+.idea/
+.DS_Store
